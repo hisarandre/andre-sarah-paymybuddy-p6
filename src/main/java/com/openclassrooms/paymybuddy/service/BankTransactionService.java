@@ -1,6 +1,5 @@
 package com.openclassrooms.paymybuddy.service;
 
-import com.openclassrooms.paymybuddy.model.Bank;
 import com.openclassrooms.paymybuddy.model.BankTransaction;
 import com.openclassrooms.paymybuddy.repository.BankTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;

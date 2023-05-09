@@ -3,7 +3,6 @@ package com.openclassrooms.paymybuddy.service;
 import com.openclassrooms.paymybuddy.model.Connection;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.ConnectionRepository;
-import com.openclassrooms.paymybuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +40,5 @@ public class ConnectionService {
         connection.setIdSender(sender.getIdUser());
         connection.setIdReceiver(receiver.getIdUser());
         return connectionRepository.save(connection);
-    }
-
-    public void deleteConnection(Connection connection) {
-        connectionRepository.delete(connection);
     }
 }

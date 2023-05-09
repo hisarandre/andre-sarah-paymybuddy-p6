@@ -57,7 +57,6 @@
                                     th:field="*{iban}"
                                     class="bg-gray-50 border-2 border-gray-700 text-gray-900 text-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                                     required>
-                                <!--<option disabled selected value="">Select A Connection</option>-->
                                 <option th:each="b : ${account.bankList}" th:value="${b.iban}"
                                         th:text="@{${b.iban}}"></option>
                             </select>

@@ -3,7 +3,6 @@ package com.openclassrooms.paymybuddy.model;
 import lombok.Data;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class User {
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = false
     )
     List<Bank> bankList = new ArrayList<>();
 

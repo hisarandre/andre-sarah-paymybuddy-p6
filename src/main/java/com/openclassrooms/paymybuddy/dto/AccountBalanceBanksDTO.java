@@ -1,11 +1,8 @@
 package com.openclassrooms.paymybuddy.dto;
 
 import com.openclassrooms.paymybuddy.model.Bank;
-import com.openclassrooms.paymybuddy.model.User;
-import jakarta.persistence.Column;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

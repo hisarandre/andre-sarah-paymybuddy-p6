@@ -21,6 +21,7 @@ public class UserService {
     public User findById(int id) {
         return userRepository.findById(id);
     }
+
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -29,7 +30,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
-
 
     public User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

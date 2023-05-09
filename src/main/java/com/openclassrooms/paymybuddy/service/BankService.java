@@ -17,6 +17,7 @@ public class BankService {
     public Bank save(Bank bank) {
         return bankRepository.save(bank);
     }
+
     public Bank addBank(String iban, String swift) {
         Bank bank = new Bank();
         User user = userService.getCurrentUser();
