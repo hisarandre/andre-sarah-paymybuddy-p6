@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="h-full bg-white" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>PayMyBuddy</title>
+    </head>
+    <body class="h-full text-xl">
+
+        <main class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+
+            <div class="sm:mx-auto sm:w-full sm:max-w-md rounded-md border-gray-200 border-2 p-10">
+                <div class="sm:mx-auto sm:w-full sm:max-w-sm pb-4">
+                    <img class="mx-auto h-16 w-auto" th:src="@{/images/logo-paymybuddy.svg}" alt="Pay My Buddy">
+                </div>
+
+                <form class="space-y-6" th:action="@{/login}" method="POST">
+
+                    <div th:if="${param.logout}" class="flex bg-green-100 rounded-lg p-4 mb-4 text-green-700" role="alert">
+                        <svg class="w-7 h-7 inline mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd">
+                            </path>
+                        </svg>
+                        <div>
+                            You have been logged out
+                        </div>
+                    </div>
+
+                    <div th:if="${param.error}" class="flex bg-red-100 rounded-lg p-4 mb-4 text-red-700" role="alert">
+                        <svg class="w-7 h-7 inline mr-3 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd">
+                            </path>
+                        </svg>
+                        <div>
+                            Invalid username and password
+                        </div>
+                    </div>
+
+                    <label for="email" class="visibility: hidden">Email address</label>
+                    <div class="relative mt-2 rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span class="text-gray-500 sm:text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                            </span>
+                        </div>
+                        <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="Email"
+                                autocomplete="email"
+                                required
+                                class="block w-full rounded-md border-0 py-3 pl-12 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:leading-6">
+                    </div>
+                    <label for="password" class="visibility: hidden">password</label>
+                    <div class="relative mt-2 rounded-md shadow-sm">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span class="text-gray-500 sm:text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                                </svg>
+                            </span>
+                        </div>
+                        <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="Password"
+                                autocomplete="current-password"
+                                required
+                                class="block w-full rounded-md border-0 py-3 pl-12 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:leading-6">
+                    </div>
+                    <label class="flex justify-center items-center mt-3 pb-10">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-gray-600"><span class="ml-2 text-gray-700">Remember me</span>
+                    </label>
+
+                    <div class="flex justify-center">
+                        <button type="submit" class="rounded-md bg-blue-600 px-10 py-2 font-semibold leading-6 text-white shadow-sm hover:bg-blue-500">Login</button>
+                    </div>
+                </form>
+
+            </div>
+            <a href="register" class="pt-5 text-center text-blue-500 hover:text-blue-600"> I don't have an account </a>
+
+        </main>
+    </body>
+</html>

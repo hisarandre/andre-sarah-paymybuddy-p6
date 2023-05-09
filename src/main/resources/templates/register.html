@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="h-full bg-white" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>PayMyBuddy</title>
+</head>
+<body class="h-full text-xl">
+
+<main class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+
+  <main class="sm:mx-auto sm:w-full sm:max-w-md rounded-md border-gray-200 border-2 p-10">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm pb-4">
+      <img class="mx-auto h-16 w-auto" th:src="@{/images/logo-paymybuddy.svg}" alt="Pay My Buddy">
+    </div>
+
+    <form class="space-y-6" th:action="@{/register}" method="POST" th:object="${user}">
+
+      <div th:if="${param.success}" class="flex bg-green-100 rounded-lg p-4 mb-4 text-green-700" role="alert">
+        <svg class="w-7 h-7 inline mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <div>
+          You have successfully registered!
+        </div>
+      </div>
+
+      <div th:if="${param.error}" class="flex bg-red-100 rounded-lg p-4 mb-4 text-red-700" role="alert">
+        <svg class="w-7 h-7 inline mr-3 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <div>
+          An account already exist
+        </div>
+      </div>
+
+      <div>
+        <label class="visibility: hidden">First Name</label>
+        <input
+                class="block w-full rounded-md border-0 py-3 pl-5 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:leading-6"
+                id="firstName"
+                name="firstName"
+                placeholder="Enter firstname"
+                th:field="*{firstName}"
+                type="text"
+                required
+        />
+      </div>
+      <div>
+        <label class="visibility: hidden">Last Name</label>
+        <input
+                class="block w-full rounded-md border-0 py-3 pl-5 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:leading-6"
+                id="lastName"
+                name="lastName"
+                placeholder="Enter lastname"
+                th:field="*{lastName}"
+                type="text"
+                required
+        />
+      </div>
+      <div>
+        <label class="visibility: hidden">Email</label>
+        <input
+                class="block w-full rounded-md border-0 py-3 pl-5 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:leading-6"
+                id="email"
+                name="email"
+                placeholder="Enter email"
+                th:field="*{email}"
+                type="text"
+                required
+        />
+      </div>
+      <div>
+        <label class="visibility: hidden">Password</label>
+        <input
+                class="block w-full rounded-md border-0 py-3 pl-5 pr-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:leading-6"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+                th:field="*{password}"
+                type="text"
+                required
+        />
+      </div>
+      <div class="flex justify-center">
+        <button type="submit" class="rounded-md bg-blue-600 px-10 py-2 font-semibold leading-6 text-white shadow-sm hover:bg-blue-500">Login</button>
+      </div>
+    </form>
+  </main>
+
+  <a href="login" class="pt-5 text-center text-blue-500 hover:text-blue-600"> I already have an account </a>
+
+</main>
+</body>
+</html>
