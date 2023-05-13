@@ -3,7 +3,9 @@ package com.openclassrooms.paymybuddy.controller;
 import com.openclassrooms.paymybuddy.dto.UserTransferDTO;
 import com.openclassrooms.paymybuddy.dto.ContactsAndTransactionsListDTO;
 
+import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.CustomService;
+import com.openclassrooms.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,9 @@ public class TransferController {
 
     @Autowired
     CustomService customService;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping("/home/transfer")
     public String getUser(Model model) {
@@ -30,8 +35,13 @@ public class TransferController {
     @PostMapping("/home/transfer")
     public String transfer(@ModelAttribute("transaction") UserTransferDTO transaction){
 
-        customService.sendMoneyToUser(transaction);
+        boolean moneySent = customService.sendMoneyToUser(transaction);
 
-        return "redirect:/home/transfer?success";
+        if(moneySent) {
+            return "redirect:/home/transfer?success";
+        } else {
+            return "redirect:/home/transfer?error";
+        }
+
     }
 }

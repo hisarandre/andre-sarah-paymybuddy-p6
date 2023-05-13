@@ -46,41 +46,53 @@ public class CustomService {
     }
 
     @Transactional
-    public void sendMoneyToBank(BankTransferDTO bankTransfer) {
+    public boolean sendMoneyToBank(BankTransferDTO bankTransfer) {
         User sender = userService.getCurrentUser();
         Bank bank = bankService.findByIban(bankTransfer.getIban());
 
-        BankTransaction bankTransaction = new BankTransaction();
-        bankTransaction.setAmount(bankTransfer.getAmount());
-        bankTransaction.setBank(bank);
-        bankTransaction.setDate(new Timestamp(System.currentTimeMillis()));
-        bankTransaction.setDescription(bankTransfer.getDescription());
-        bankTransaction.setFees(Fee.BANK_TRANSACTION);
+        float amountWithFees = bankTransfer.getAmount() + bankTransfer.getAmount() * Fee.CONNECTION_TRANSACTION;
 
-        float amountWithFees = bankTransaction.getAmount() + bankTransaction.getAmount() * bankTransaction.getFees();
-        sender.setBalance(sender.getBalance() - amountWithFees);
+        if(amountWithFees <= sender.getBalance()) {
+            BankTransaction bankTransaction = new BankTransaction();
+            bankTransaction.setAmount(bankTransfer.getAmount());
+            bankTransaction.setBank(bank);
+            bankTransaction.setDate(new Timestamp(System.currentTimeMillis()));
+            bankTransaction.setDescription(bankTransfer.getDescription());
+            bankTransaction.setFees(Fee.BANK_TRANSACTION);
 
-        bankTransactionService.save(bankTransaction);
+            sender.setBalance(sender.getBalance() - amountWithFees);
+
+            bankTransactionService.save(bankTransaction);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     @Transactional
-    public void sendMoneyToUser(UserTransferDTO transaction){
-        User sender = userService.getCurrentUser();
+    public boolean sendMoneyToUser(UserTransferDTO transaction){
         User receiver = userService.findById(transaction.getIdReceiver());
+        User sender = userService.getCurrentUser();
         Connection connection = connectionService.findBySenderAndReceiver(sender, receiver);
+        float amountWithFees = transaction.getAmount() + transaction.getAmount() * Fee.CONNECTION_TRANSACTION;
 
-        ConnectionTransaction connectionTransaction = new ConnectionTransaction();
-        connectionTransaction.setAmount(transaction.getAmount());
-        connectionTransaction.setConnection(connection);
-        connectionTransaction.setDate(new Timestamp(System.currentTimeMillis()));
-        connectionTransaction.setDescription(transaction.getDescription());
-        connectionTransaction.setFees(Fee.CONNECTION_TRANSACTION);
+        if(amountWithFees <= sender.getBalance()){
+            ConnectionTransaction connectionTransaction = new ConnectionTransaction();
+            connectionTransaction.setAmount(transaction.getAmount());
+            connectionTransaction.setConnection(connection);
+            connectionTransaction.setDate(new Timestamp(System.currentTimeMillis()));
+            connectionTransaction.setDescription(transaction.getDescription());
+            connectionTransaction.setFees(Fee.CONNECTION_TRANSACTION);
 
-        float amountWithFees = connectionTransaction.getAmount() + connectionTransaction.getAmount() * connectionTransaction.getFees();
-        sender.setBalance(sender.getBalance() - amountWithFees);
-        receiver.setBalance(receiver.getBalance() + connectionTransaction.getAmount());
+            sender.setBalance(sender.getBalance() - amountWithFees);
+            receiver.setBalance(receiver.getBalance() + connectionTransaction.getAmount());
 
-        connectionTransactionService.save(connectionTransaction);
+            connectionTransactionService.save(connectionTransaction);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public ContactsAndTransactionsListDTO getTransferDetails(){

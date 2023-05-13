@@ -35,8 +35,14 @@ public class ProfileController {
 
     @PostMapping(value = "/home/profile", params = "action=pay")
     public String transfer(@ModelAttribute("transaction") BankTransferDTO bankTransfer) {
-            customService.sendMoneyToBank(bankTransfer);
+
+        boolean moneySent = customService.sendMoneyToBank(bankTransfer);
+
+        if(moneySent) {
             return "redirect:/home/profile?sent";
+        } else {
+            return "redirect:/home/profile?notsent";
+        }
     }
 
     @PostMapping(value = "/home/profile", params = "action=add")
