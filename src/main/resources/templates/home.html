@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#5CB95C',
+                            'primary-hover': '#68be68',
+                            secondary: '#F4F7FD',
+                        }
+                    }
+                }
+            }
+        </script>
+    <title>Home</title>
 </head>
-<body>
+<body class="h-screen flex flex-col">
+<header class="bg-white">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8" aria-label="Global">
+        <div class="flex lg:flex-1">
+            <a href="home" class="-m-1.5 p-1.5">
+                <img class="h-16 w-auto" th:src="@{/images/logo-paymybuddy.svg}" alt="Pay My Buddy">
+            </a>
+        </div>
+        <div class="flex gap-x-6">
+            <a href="#" class="text-xl font-semibold leading-6 text-blue-500">Home</a>
+            <a href="home/transfer" class="text-xl font-semibold leading-6 text-gray-900 hover:text-gray-500">Transfer</a>
+            <a href="home/profile" class="text-xl font-semibold leading-6 text-gray-900 hover:text-gray-500">Profile</a>
+            <a href="home/contact" class="text-xl font-semibold leading-6 text-gray-900 hover:text-gray-500">Contact</a>
+            <a th:href="@{/logout}" class="text-xl font-semibold leading-6 text-gray-900 hover:text-gray-500">Log off</a>
+        </div>
+    </nav>
+</header>
+<main class="bg-secondary flex h-full justify-center items-center">
+    <img class="h-300 w-auto" th:src="@{/images/banner.png}" alt="Pay My Buddy">
+</main>
 
 </body>
 </html>

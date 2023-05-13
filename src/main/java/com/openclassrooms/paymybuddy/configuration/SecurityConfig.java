@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
-                .defaultSuccessUrl("/home/transfer", true)
+                .defaultSuccessUrl("/home", true)
                 .permitAll()
                 .and()
                 .logout();
