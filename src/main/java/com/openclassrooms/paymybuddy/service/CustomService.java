@@ -67,7 +67,7 @@ public class CustomService {
     public void sendMoneyToUser(UserTransferDTO transaction){
         User sender = userService.getCurrentUser();
         User receiver = userService.findById(transaction.getIdReceiver());
-        Connection connection = connectionService.findByIdSenderAndIdReceiver(sender.getIdUser(), transaction.getIdReceiver());
+        Connection connection = connectionService.findBySenderAndReceiver(sender, receiver);
 
         ConnectionTransaction connectionTransaction = new ConnectionTransaction();
         connectionTransaction.setAmount(transaction.getAmount());
@@ -88,8 +88,8 @@ public class CustomService {
         ContactsAndTransactionsListDTO transferDetails = new ContactsAndTransactionsListDTO();
         transferDetails.setContacts(user.getContactList());
 
-        List<Connection> debitFromUser = connectionService.findByIdSender(user.getIdUser());
-        List<Connection> creditFromUser = connectionService.findByIdReceiver(user.getIdUser());
+        List<Connection> debitFromUser = connectionService.findBySender(user);
+        List<Connection> creditFromUser = connectionService.findByReceiver(user);
         List<TransactionConnectionDescriptionAmountDTO> transactions = new ArrayList<>();
 
         Bank currentBank = user.getBankList().get(0);
@@ -109,7 +109,7 @@ public class CustomService {
         transactions.addAll(debitFromUser.stream()
                 .flatMap(c -> c.getTransactionList().stream()
                         .map(t -> {
-                            User receiver = userService.findById(c.getIdReceiver());
+                            User receiver = c.getReceiver();
                             TransactionConnectionDescriptionAmountDTO transaction = mapper.debitFromUserTransaction(t);
                             transaction.setConnection(receiver.getLastName() + " " + receiver.getFirstName());
                             return transaction;
@@ -118,7 +118,7 @@ public class CustomService {
 
         transactions.addAll(creditFromUser.stream().flatMap(c -> c.getTransactionList().stream()
                          .map(t -> {
-                             User sender = userService.findById(c.getIdSender());
+                             User sender = c.getSender();
                              TransactionConnectionDescriptionAmountDTO transaction = mapper.creditFromUserTransaction(t);
                              transaction.setConnection(sender.getLastName() + " " + sender.getFirstName());
                              return transaction;

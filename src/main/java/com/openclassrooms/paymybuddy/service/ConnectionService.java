@@ -17,16 +17,16 @@ public class ConnectionService {
     @Autowired
     private UserService userService;
 
-    public List<Connection> findByIdSender(int id) {
-        return connectionRepository.findByIdSender(id);
+    public List<Connection> findBySender(User sender) {
+        return connectionRepository.findBySender(sender);
     }
 
-    public List<Connection> findByIdReceiver(int id) {
-        return connectionRepository.findByIdReceiver(id);
+    public List<Connection> findByReceiver(User receiver) {
+        return connectionRepository.findByReceiver(receiver);
     }
 
-    public Connection findByIdSenderAndIdReceiver(int idSender, int idReceiver) {
-        return connectionRepository.findByIdSenderAndIdReceiver(idSender, idReceiver);
+    public Connection findBySenderAndReceiver(User sender, User receiver) {
+        return connectionRepository.findBySenderAndReceiver(sender, receiver);
     }
 
     public Connection findById(int id) {
@@ -37,8 +37,8 @@ public class ConnectionService {
         User sender = userService.getCurrentUser();
 
         Connection connection = new Connection();
-        connection.setIdSender(sender.getIdUser());
-        connection.setIdReceiver(receiver.getIdUser());
+        connection.setSender(sender);
+        connection.setReceiver(receiver);
         return connectionRepository.save(connection);
     }
 }

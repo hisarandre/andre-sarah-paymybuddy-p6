@@ -17,11 +17,13 @@ public class Connection {
     @Column(name = "id_connection")
     private int idConnection;
 
-    @Column(name = "id_sender")
-    private int idSender;
+    @ManyToOne
+    @JoinColumn(name = "id_sender", referencedColumnName = "id_user")
+    private User sender;
 
-    @Column(name = "id_receiver")
-    private int idReceiver;
+    @ManyToOne
+    @JoinColumn(name = "id_receiver", referencedColumnName = "id_user")
+    private User receiver;
 
     @OneToMany(
             mappedBy = "connection",
@@ -34,8 +36,8 @@ public class Connection {
     public String toString() {
         return "Connection{" +
                 "idConnection='" + idConnection + '\'' +
-                ", idSender='" + idSender + '\'' +
-                ", idReceiver='" + idReceiver + '\'' +
+                ", Sender name='" + sender.getFirstName() + '\'' +
+                ", Receiver name='" + receiver.getFirstName() + '\'' +
                 ", transactionList='" + transactionList.stream().map(ConnectionTransaction::getIdTransaction).collect(Collectors.toList()) + '\'' +
                 '}';
     }
