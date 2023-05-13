@@ -2,9 +2,11 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.dto.*;
 import com.openclassrooms.paymybuddy.model.*;
+import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.openclassrooms.paymybuddy.constants.Fee;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class CustomService {
 
         account.setFirstName(user.getFirstName());
         account.setLastName(user.getLastName());
+        account.setEmail(user.getEmail());
         account.setBalance(user.getBalance());
         account.setCurrentBank(user.getBankList().get(0));
 
@@ -42,7 +45,8 @@ public class CustomService {
         return account;
     }
 
-    public void sendMoneyToBank(BankTransferDTO bankTransfer){
+    @Transactional
+    public void sendMoneyToBank(BankTransferDTO bankTransfer) {
         User sender = userService.getCurrentUser();
         Bank bank = bankService.findByIban(bankTransfer.getIban());
 
@@ -51,7 +55,7 @@ public class CustomService {
         bankTransaction.setBank(bank);
         bankTransaction.setDate(new Timestamp(System.currentTimeMillis()));
         bankTransaction.setDescription(bankTransfer.getDescription());
-        bankTransaction.setFees(0.05F);
+        bankTransaction.setFees(Fee.BANK_TRANSACTION);
 
         float amountWithFees = bankTransaction.getAmount() + bankTransaction.getAmount() * bankTransaction.getFees();
         sender.setBalance(sender.getBalance() - amountWithFees);
@@ -59,6 +63,7 @@ public class CustomService {
         bankTransactionService.save(bankTransaction);
     }
 
+    @Transactional
     public void sendMoneyToUser(UserTransferDTO transaction){
         User sender = userService.getCurrentUser();
         User receiver = userService.findById(transaction.getIdReceiver());
@@ -69,7 +74,7 @@ public class CustomService {
         connectionTransaction.setConnection(connection);
         connectionTransaction.setDate(new Timestamp(System.currentTimeMillis()));
         connectionTransaction.setDescription(transaction.getDescription());
-        connectionTransaction.setFees(0.05F);
+        connectionTransaction.setFees(Fee.CONNECTION_TRANSACTION);
 
         float amountWithFees = connectionTransaction.getAmount() + connectionTransaction.getAmount() * connectionTransaction.getFees();
         sender.setBalance(sender.getBalance() - amountWithFees);
