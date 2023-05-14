@@ -2,7 +2,6 @@ package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.Authorities;
 import com.openclassrooms.paymybuddy.model.Bank;
-import com.openclassrooms.paymybuddy.model.BankTransaction;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.AuthoritiesService;
 import com.openclassrooms.paymybuddy.service.BankService;
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * Controller for handling user registration.
+ */
 @Controller
 public class RegisterController {
     @Autowired
@@ -24,12 +26,24 @@ public class RegisterController {
     @Autowired
     AuthoritiesService authoritiesService;
 
+    /**
+     * Displays the registration form.
+     *
+     * @param model the model to be used for rendering the view
+     * @return the name of the view to be rendered
+     */
     @GetMapping("/register")
     public String registerUser(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
+    /**
+     * Processes the registration form and creates a new user.
+     *
+     * @param user the user to be created
+     * @return a redirect URL indicating the outcome of the registration process
+     */
     @PostMapping("/register")
     public String registration(@ModelAttribute("user") User user){
 

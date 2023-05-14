@@ -14,6 +14,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class provides custom services such as sending money to a bank account,
+ * sending money to another user, getting account details, and getting transaction details.
+ */
 @Service
 public class CustomService {
     @Autowired
@@ -28,6 +32,13 @@ public class CustomService {
     @Autowired
     BankTransactionService bankTransactionService;
 
+    /**
+     * Retrieves the account details of a given user, including first name, last name, email, balance,
+     * and list of connected bank accounts.
+     *
+     * @param user details
+     * @return AccountBalanceBanksDTO containing the user's account details
+     */
     public AccountBalanceBanksDTO getAccount(User user){
         AccountBalanceBanksDTO account = new AccountBalanceBanksDTO();
 
@@ -45,6 +56,13 @@ public class CustomService {
         return account;
     }
 
+    /**
+     * Sends money from the user's PayMyBuddy account to their connected bank account.
+     *
+     * @param bankTransfer containing the details of the bank transfer
+     *                     the amount and the recipient's bank account, and a description
+     * @return true if the transfer is successful, false otherwise
+     */
     @Transactional
     public boolean sendMoneyToBank(BankTransferDTO bankTransfer) {
         User sender = userService.getCurrentUser();
@@ -70,8 +88,16 @@ public class CustomService {
 
     }
 
+    /**
+     * Sends money from the user's account to another account.
+     *
+     * @param transaction containing the details of the user, the amount,
+     *                    the recipient's user ID, and a description.
+     * @return true if the transfer is successful, false otherwise
+     */
     @Transactional
     public boolean sendMoneyToUser(UserTransferDTO transaction){
+        //find the connection
         User receiver = userService.findById(transaction.getIdReceiver());
         User sender = userService.getCurrentUser();
         Connection connection = connectionService.findBySenderAndReceiver(sender, receiver);
@@ -95,11 +121,16 @@ public class CustomService {
         }
     }
 
+    /**
+     * Retrieves the transactions list for the current user, including contacts and transactions.
+     * @return a ContactsAndTransactionsListDTO containing the user's contacts and transactions.
+     */
     public ContactsAndTransactionsListDTO getTransferDetails(){
         User user = userService.getCurrentUser();
         ContactsAndTransactionsListDTO transferDetails = new ContactsAndTransactionsListDTO();
         transferDetails.setContacts(user.getContactList());
 
+        // Get the transactions for the user's connections and banks
         List<Connection> debitFromUser = connectionService.findBySender(user);
         List<Connection> creditFromUser = connectionService.findByReceiver(user);
         List<TransactionConnectionDescriptionAmountDTO> transactions = new ArrayList<>();
@@ -109,15 +140,18 @@ public class CustomService {
 
         List<Bank> banks = user.getBankList().stream().skip(1).toList();
 
+        // Add the transactions from the user's other banks
         transactions.addAll(banks.stream()
                 .flatMap(bank -> bank.getTransactionList().stream())
                 .map(t -> mapper.debitFromBankTransaction(t))
                 .toList());
 
+        // Add the transactions from the current bank
         transactions.addAll(creditFromBank.stream()
                 .map(t -> mapper.creditFromBankTransaction(t))
                 .toList());
 
+        // Add the transactions where the user is the sender
         transactions.addAll(debitFromUser.stream()
                 .flatMap(c -> c.getTransactionList().stream()
                         .map(t -> {
@@ -128,6 +162,7 @@ public class CustomService {
                         }))
                 .toList());
 
+        // Add the transactions where the user is the receiver
         transactions.addAll(creditFromUser.stream().flatMap(c -> c.getTransactionList().stream()
                          .map(t -> {
                              User sender = c.getSender();
@@ -137,10 +172,12 @@ public class CustomService {
                          }))
                 .toList());
 
+        // Sort the transactions by date in descending order
         transactions = transactions.stream()
                 .sorted(Comparator.comparing(TransactionConnectionDescriptionAmountDTO::getDate).reversed())
                 .collect(Collectors.toList());
 
+        // Set the transactions in the ContactsAndTransactionsListDTO object and return it
         transferDetails.setTransactions(transactions);
         return transferDetails;
     }
