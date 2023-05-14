@@ -1,15 +1,18 @@
 package com.openclassrooms.paymybuddy.configuration;
 
+import com.openclassrooms.paymybuddy.service.CustomUserDetailsService;
+import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
@@ -17,6 +20,9 @@ public class SecurityConfig {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    CustomUserDetailsService userDetailsService;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -28,6 +34,7 @@ public class SecurityConfig {
                 .authoritiesByUsernameQuery("select email,authority "
                         + "from authorities "
                         + "where email = ?");
+        auth.userDetailsService(userDetailsService);
     }
 
     @Bean
@@ -53,10 +60,14 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/home", true)
                 .permitAll()
                 .and()
-                .logout();
+                .logout()
+                .deleteCookies("JSESSIONID")
+                .and()
+                .rememberMe()
+                .key("uniqueAndSecret")
+                .tokenValiditySeconds(120)
+                .userDetailsService(userDetailsService);
         return http.build();
     }
-
-
 
 }
