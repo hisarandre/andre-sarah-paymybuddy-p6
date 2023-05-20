@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .and()
                 .rememberMe()
                 .key("uniqueAndSecret")
-                .tokenValiditySeconds(120)
+                .tokenValiditySeconds(45)
                 .userDetailsService(userDetailsService);
         return http.build();
     }
