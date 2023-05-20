@@ -130,10 +130,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="odd:bg-white even:bg-gray-100" th:each="t : ${transfer.transactions}">
+                                    <tr class="odd:bg-white even:bg-gray-100" th:each="t : ${transferList.content}">
                                         <td class="px-6 py-8 whitespace-normal font-medium text-center" th:text="@{${t.connection}}"></td>
                                         <td class="px-6 py-8 whitespace-normal font-medium text-center" th:text="@{${t.description}}"></td>
-                                        <td class="px-6 py-8 whitespace-normal font-medium text-center" th:text="@{${t.amount}}"></td>
+                                        <td class="px-6 py-8 whitespace-normal font-medium text-center" th:text="@{${t.amount} + '€'}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -142,6 +142,53 @@
                 </div>
             </div>
         </section>
+
+        <nav th:if="${transferList.totalPages > 1}" class="w-full isolate inline-flex -space-x-px rounded-md mb-12 text-2xl text-blue-600 justify-center items-center" aria-label="Pagination">
+
+            <div th:if="${transferList.number == 0}"
+               class="relative inline-flex items-center rounded-l-md w-14 h-14 flex justify-center items-center ring-1 ring-inset ring-gray-300 bg-gray-50">
+                <span class="sr-only">Previous</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                </svg>
+            </div>
+
+            <a th:if="${transferList.number > 0}"
+               th:href="@{/home/transfer(size=${transferList.size}, page=${transferList.number})}"
+               class="relative inline-flex items-center rounded-l-md w-14 h-14 flex justify-center items-center ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <span class="sr-only">Previous</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                </svg>
+            </a>
+
+            <div th:if="${transferList.totalPages > 0}"
+                 class="relative inline-flex items-center w-14 h-14 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 pagination flex justify-center items-center"
+                 th:each="pageNumber : ${pageNumbers}">
+                <a
+                   th:href="@{/home/transfer(size=${transferList.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}
+                   th:class="${pageNumber==transferList.number + 1} ? active"></a>
+            </div>
+
+            <a  th:if="${transferList.number} != ${transferList.totalPages} - 1"
+                th:href="@{/home/transfer(size=${transferList.size}, page=${transferList.number + 2})}"
+                class="relative inline-flex items-center rounded-r-md w-14 h-14 flex justify-center items-center ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                <span class="sr-only">Next</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                </svg>
+            </a>
+
+            <div  th:if="${transferList.number} == ${transferList.totalPages} - 1"
+                class="relative inline-flex items-center rounded-r-md w-14 h-14 flex justify-center items-center ring-1 ring-inset ring-gray-300 bg-gray-50">
+                <span class="sr-only">Next</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </nav>
+
     </main>
 
     </body>

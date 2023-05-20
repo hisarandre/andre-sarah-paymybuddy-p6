@@ -5,11 +5,16 @@ import com.openclassrooms.paymybuddy.model.*;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.openclassrooms.paymybuddy.constants.Fee;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +90,6 @@ public class CustomService {
         } else {
             return false;
         }
-
     }
 
     /**
@@ -180,5 +184,27 @@ public class CustomService {
         // Set the transactions in the ContactsAndTransactionsListDTO object and return it
         transferDetails.setTransactions(transactions);
         return transferDetails;
+    }
+
+    public Page<TransactionConnectionDescriptionAmountDTO> findPaginated(Pageable pageable) {
+        ContactsAndTransactionsListDTO transferDetails = getTransferDetails();
+        List<TransactionConnectionDescriptionAmountDTO> transactions = transferDetails.getTransactions();
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<TransactionConnectionDescriptionAmountDTO> list;
+
+        if (transactions.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, transactions.size());
+            list = transactions.subList(startItem, toIndex);
+        }
+
+        Page<TransactionConnectionDescriptionAmountDTO> transactionPage
+                = new PageImpl<TransactionConnectionDescriptionAmountDTO>(list, PageRequest.of(currentPage, pageSize), transactions.size());
+
+        return transactionPage;
     }
 }
