@@ -92,6 +92,16 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.ymock.mock</groupId>
+            <artifactId>mock-jdbc</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 	<build>
