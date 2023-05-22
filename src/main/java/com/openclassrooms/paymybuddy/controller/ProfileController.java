@@ -50,7 +50,7 @@ public class ProfileController {
      * @return a redirect to the profile page with a success or error message
      */
     @PostMapping(value = "/home/profile", params = "action=pay")
-    public String transfer(@ModelAttribute("transaction") BankTransferDTO bankTransfer) {
+    public String transferToBank(@ModelAttribute("transaction") BankTransferDTO bankTransfer) {
 
         boolean moneySent = customService.sendMoneyToBank(bankTransfer);
 
@@ -59,6 +59,20 @@ public class ProfileController {
         } else {
             return "redirect:/home/profile?notsent";
         }
+    }
+
+    /**
+     * Processes transfer request to their account.
+     *
+     * @param bankTransfer the DTO containing the details of the bank transfer request
+     * @return a redirect to the profile page with a success or error message
+     */
+    @PostMapping(value = "/home/profile", params = "action=credit")
+    public String transferToAccount(@ModelAttribute("transaction") BankTransferDTO bankTransfer) {
+
+        customService.addMoneyToAccount(bankTransfer);
+
+        return "redirect:/home/profile?credited";
     }
 
     /**

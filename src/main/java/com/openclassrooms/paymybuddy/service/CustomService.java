@@ -126,6 +126,29 @@ public class CustomService {
     }
 
     /**
+     * Sends money to the user's account.
+     *
+     * @param bankTransfer containing the details of the amount
+     */
+    @Transactional
+    public void addMoneyToAccount(BankTransferDTO bankTransfer) {
+        User sender = userService.getCurrentUser();
+        AccountBalanceBanksDTO account = getAccount(sender);
+        Bank bank = account.getCurrentBank();
+
+        BankTransaction bankTransaction = new BankTransaction();
+        bankTransaction.setAmount(bankTransfer.getAmount());
+        bankTransaction.setBank(bank);
+        bankTransaction.setDate(new Timestamp(System.currentTimeMillis()));
+        bankTransaction.setDescription("Credit account");
+        bankTransaction.setFees(Fee.BANK_TRANSACTION);
+
+        sender.setBalance(sender.getBalance() + bankTransaction.getAmount());
+
+        bankTransactionService.save(bankTransaction);
+    }
+
+    /**
      * Retrieves the transactions list for the current user, including contacts and transactions.
      * @return a ContactsAndTransactionsListDTO containing the user's contacts and transactions.
      */
